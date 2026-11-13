@@ -6,7 +6,7 @@
     "anti_pattern": "Starting the lesson with formal architectural definitions or acronym breakdowns.",
     "best_practice": "Use the 'open-book exam vs closed-book exam' or 'research librarian' metaphor right in the hook.",
     "learned_from_topic": "Introduction to RAG",
-    "frequency_triggered": 3
+    "frequency_triggered": 5
   },
   {
     "id": "RULE-EXAMPLE-INTR",
@@ -15,7 +15,7 @@
     "anti_pattern": "Describing retrieval abstractly (e.g. 'the system finds relevant documents and answers') without showing the exact query and text snippet.",
     "best_practice": "Use a relatable scenario such as customer support for a specific product (e.g. smartwatch water resistance in a sauna).",
     "learned_from_topic": "Introduction to RAG",
-    "frequency_triggered": 3
+    "frequency_triggered": 5
   },
   {
     "id": "RULE-JARGON-INTR",
@@ -24,6 +24,87 @@
     "anti_pattern": "Throwing terms like 'high-dimensional dense vectors' or 'approximate nearest neighbor' at the reader without translation.",
     "best_practice": "Always pair: 'embeddings' = 'numerical fingerprints of meaning'; 'vector database' = 'smart filing cabinet'; 'chunking' = 'cutting text into index cards'.",
     "learned_from_topic": "Introduction to RAG",
-    "frequency_triggered": 3
+    "frequency_triggered": 5
+  },
+  {
+    "id": "RULE-JARGON-EXPL",
+    "target_checkpoint": "CHK_NO_JARGON",
+    "rule": "Never mention 'vector', 'embeddings', 'chunking', or 'cosine similarity' without an immediate, intuitive plain-English analogy in the same sentence.",
+    "anti_pattern": "Throwing terms like 'high-dimensional dense vectors' or 'approximate nearest neighbor' at the reader without translation.",
+    "best_practice": "Always pair: 'embeddings' = 'numerical fingerprints of meaning'; 'vector database' = 'smart filing cabinet'; 'chunking' = 'cutting text into index cards'.",
+    "learned_from_topic": "Explain about ai",
+    "frequency_triggered": 1
+  },
+  {
+    "id": "RULE-BEGINNER-EXPL",
+    "target_checkpoint": "CHK_BEGINNER",
+    "rule": "Lead with an intuitive everyday analogy before defining any technical acronyms.",
+    "anti_pattern": "Starting the lesson with formal architectural definitions or acronym breakdowns.",
+    "best_practice": "Use the 'open-book exam vs closed-book exam' or 'research librarian' metaphor right in the hook.",
+    "learned_from_topic": "Explain about ai",
+    "frequency_triggered": 1
+  },
+  {
+    "id": "RULE-EXAMPLE-EXPL",
+    "target_checkpoint": "CHK_EXAMPLE",
+    "rule": "Every lesson MUST include a complete 4-part walkthrough: (1) User question, (2) Without-RAG mistake, (3) Retrieved reference document snippet, (4) Grounded answer.",
+    "anti_pattern": "Describing retrieval abstractly (e.g. 'the system finds relevant documents and answers') without showing the exact query and text snippet.",
+    "best_practice": "Use a relatable scenario such as customer support for a specific product (e.g. smartwatch water resistance in a sauna).",
+    "learned_from_topic": "Explain about ai",
+    "frequency_triggered": 1
+  },
+  {
+    "id": "RULE-EXAMPLE-TELL",
+    "target_checkpoint": "CHK_EXAMPLE",
+    "rule": "Every lesson MUST include a complete 4-part walkthrough: (1) User question, (2) Without-RAG mistake, (3) Retrieved reference document snippet, (4) Grounded answer.",
+    "anti_pattern": "Describing retrieval abstractly (e.g. 'the system finds relevant documents and answers') without showing the exact query and text snippet.",
+    "best_practice": "Use a relatable scenario such as customer support for a specific product (e.g. smartwatch water resistance in a sauna).",
+    "learned_from_topic": "tell me about ai",
+    "frequency_triggered": 2
+  },
+  {
+    "id": "RULE-BEGINNER-TELL",
+    "target_checkpoint": "CHK_BEGINNER",
+    "rule": "Lead with an intuitive everyday analogy before defining any technical acronyms.",
+    "anti_pattern": "Starting the lesson with formal architectural definitions or acronym breakdowns.",
+    "best_practice": "Use the 'open-book exam vs closed-book exam' or 'research librarian' metaphor right in the hook.",
+    "learned_from_topic": "tell me about ai",
+    "frequency_triggered": 2
+  },
+  {
+    "id": "RULE-JARGON-TELL",
+    "target_checkpoint": "CHK_NO_JARGON",
+    "rule": "Never mention 'vector', 'embeddings', 'chunking', or 'cosine similarity' without an immediate, intuitive plain-English analogy in the same sentence.",
+    "anti_pattern": "Throwing terms like 'high-dimensional dense vectors' or 'approximate nearest neighbor' at the reader without translation.",
+    "best_practice": "Always pair: 'embeddings' = 'numerical fingerprints of meaning'; 'vector database' = 'smart filing cabinet'; 'chunking' = 'cutting text into index cards'.",
+    "learned_from_topic": "tell me about ai",
+    "frequency_triggered": 2
+  },
+  {
+    "id": "RULE-BEGINNER-VECT",
+    "target_checkpoint": "CHK_BEGINNER",
+    "rule": "Lead with an intuitive everyday analogy before defining any technical acronyms.",
+    "anti_pattern": "Starting the lesson with formal architectural definitions or acronym breakdowns.",
+    "best_practice": "Use the 'open-book exam vs closed-book exam' or 'research librarian' metaphor right in the hook.",
+    "learned_from_topic": "Vector Embeddings for Beginners",
+    "frequency_triggered": 1
+  },
+  {
+    "id": "RULE-JARGON-VECT",
+    "target_checkpoint": "CHK_NO_JARGON",
+    "rule": "Never mention 'vector', 'embeddings', 'chunking', or 'cosine similarity' without an immediate, intuitive plain-English analogy in the same sentence.",
+    "anti_pattern": "Throwing terms like 'high-dimensional dense vectors' or 'approximate nearest neighbor' at the reader without translation.",
+    "best_practice": "Always pair: 'embeddings' = 'numerical fingerprints of meaning'; 'vector database' = 'smart filing cabinet'; 'chunking' = 'cutting text into index cards'.",
+    "learned_from_topic": "Vector Embeddings for Beginners",
+    "frequency_triggered": 1
+  },
+  {
+    "id": "RULE-EXAMPLE-VECT",
+    "target_checkpoint": "CHK_EXAMPLE",
+    "rule": "Every lesson MUST include a complete 4-part walkthrough: (1) User question, (2) Without-RAG mistake, (3) Retrieved reference document snippet, (4) Grounded answer.",
+    "anti_pattern": "Describing retrieval abstractly (e.g. 'the system finds relevant documents and answers') without showing the exact query and text snippet.",
+    "best_practice": "Use a relatable scenario such as customer support for a specific product (e.g. smartwatch water resistance in a sauna).",
+    "learned_from_topic": "Vector Embeddings for Beginners",
+    "frequency_triggered": 1
   }
 ]

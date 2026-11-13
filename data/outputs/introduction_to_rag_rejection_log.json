@@ -1,0 +1,134 @@
+[
+  {
+    "attempt": 1,
+    "timestamp": "2026-11-14T01:20:52.008089",
+    "failed_checkpoints": [
+      "CHK_ACCURACY",
+      "CHK_BEGINNER",
+      "CHK_EXAMPLE",
+      "CHK_NO_JARGON",
+      "CHK_KEY_POINTS",
+      "CHK_COHERENT_FLOW"
+    ],
+    "critique_summary": "The lesson failed 6 critical checkpoints: CHK_ACCURACY, CHK_BEGINNER, CHK_EXAMPLE, CHK_NO_JARGON, CHK_KEY_POINTS, CHK_COHERENT_FLOW. Must address specific remediation feedback.",
+    "detailed_failures": [
+      {
+        "checkpoint": "Accurate & Grounded",
+        "id": "CHK_ACCURACY",
+        "reason": "Contains inaccurate statements or lacks substance.",
+        "evidence": "Insufficient factual grounding.",
+        "remediation": "Ensure core principles are accurately represented."
+      },
+      {
+        "checkpoint": "Beginner-Friendly Language",
+        "id": "CHK_BEGINNER",
+        "reason": "Too academic and dry; assumes prior familiarity with technical terminology.",
+        "evidence": "Relies on technical terminology without beginner framing.",
+        "remediation": "Introduce an everyday metaphor early to ground intuition."
+      },
+      {
+        "checkpoint": "Teaches by Concrete Example",
+        "id": "CHK_EXAMPLE",
+        "reason": "Lacks an end-to-end real-world walkthrough demonstrating practical application.",
+        "evidence": "No concrete user inquiry with specific scenario provided.",
+        "remediation": "Add a realistic scenario showing: (1) Real problem/question, (2) Step-by-step resolution, (3) Practical outcome."
+      },
+      {
+        "checkpoint": "Clear, No Unexplained Jargon",
+        "id": "CHK_NO_JARGON",
+        "reason": "Introduced technical jargon without defining them for a beginner.",
+        "evidence": "Found technical domain jargon without layman explanation.",
+        "remediation": "Define all technical concepts using intuitive everyday analogies before or upon use."
+      },
+      {
+        "checkpoint": "Covers All Key Pillars",
+        "id": "CHK_KEY_POINTS",
+        "reason": "Fails to cover all three foundational pillars adequately.",
+        "evidence": "Missing clear coverage of all three pillars.",
+        "remediation": "Ensure distinct sections for What it is, Why it matters, and How it works."
+      },
+      {
+        "checkpoint": "Coherent Pedagogical Flow",
+        "id": "CHK_COHERENT_FLOW",
+        "reason": "Teaching flow is disjointed or lacks structure.",
+        "evidence": "Needs better structural progression.",
+        "remediation": "Organize with clear numbered section headers and a concluding summary."
+      }
+    ],
+    "remediation_plan": [
+      "Fix Accurate & Grounded: Ensure core principles are accurately represented.",
+      "Fix Beginner-Friendly Language: Introduce an everyday metaphor early to ground intuition.",
+      "Fix Teaches by Concrete Example: Add a realistic scenario showing: (1) Real problem/question, (2) Step-by-step resolution, (3) Practical outcome.",
+      "Fix Clear, No Unexplained Jargon: Define all technical concepts using intuitive everyday analogies before or upon use.",
+      "Fix Covers All Key Pillars: Ensure distinct sections for What it is, Why it matters, and How it works.",
+      "Fix Coherent Pedagogical Flow: Organize with clear numbered section headers and a concluding summary."
+    ],
+    "changes_made_in_next_draft": "Revision will address: Accurate & Grounded, Beginner-Friendly Language, Teaches by Concrete Example, Clear, No Unexplained Jargon, Covers All Key Pillars, Coherent Pedagogical Flow"
+  },
+  {
+    "attempt": 2,
+    "timestamp": "2026-11-14T01:20:52.009328",
+    "failed_checkpoints": [
+      "CHK_ACCURACY",
+      "CHK_BEGINNER",
+      "CHK_EXAMPLE",
+      "CHK_NO_JARGON",
+      "CHK_KEY_POINTS",
+      "CHK_COHERENT_FLOW"
+    ],
+    "critique_summary": "The lesson failed 6 critical checkpoints: CHK_ACCURACY, CHK_BEGINNER, CHK_EXAMPLE, CHK_NO_JARGON, CHK_KEY_POINTS, CHK_COHERENT_FLOW. Must address specific remediation feedback.",
+    "detailed_failures": [
+      {
+        "checkpoint": "Accurate & Grounded",
+        "id": "CHK_ACCURACY",
+        "reason": "Contains inaccurate statements or lacks substance.",
+        "evidence": "Insufficient factual grounding.",
+        "remediation": "Ensure core principles are accurately represented."
+      },
+      {
+        "checkpoint": "Beginner-Friendly Language",
+        "id": "CHK_BEGINNER",
+        "reason": "Too academic and dry; assumes prior familiarity with technical terminology.",
+        "evidence": "Relies on technical terminology without beginner framing.",
+        "remediation": "Introduce an everyday metaphor early to ground intuition."
+      },
+      {
+        "checkpoint": "Teaches by Concrete Example",
+        "id": "CHK_EXAMPLE",
+        "reason": "Lacks an end-to-end real-world walkthrough demonstrating practical application.",
+        "evidence": "No concrete user inquiry with specific scenario provided.",
+        "remediation": "Add a realistic scenario showing: (1) Real problem/question, (2) Step-by-step resolution, (3) Practical outcome."
+      },
+      {
+        "checkpoint": "Clear, No Unexplained Jargon",
+        "id": "CHK_NO_JARGON",
+        "reason": "Introduced technical jargon without defining them for a beginner.",
+        "evidence": "Found technical domain jargon without layman explanation.",
+        "remediation": "Define all technical concepts using intuitive everyday analogies before or upon use."
+      },
+      {
+        "checkpoint": "Covers All Key Pillars",
+        "id": "CHK_KEY_POINTS",
+        "reason": "Fails to cover all three foundational pillars adequately.",
+        "evidence": "Missing clear coverage of all three pillars.",
+        "remediation": "Ensure distinct sections for What it is, Why it matters, and How it works."
+      },
+      {
+        "checkpoint": "Coherent Pedagogical Flow",
+        "id": "CHK_COHERENT_FLOW",
+        "reason": "Teaching flow is disjointed or lacks structure.",
+        "evidence": "Needs better structural progression.",
+        "remediation": "Organize with clear numbered section headers and a concluding summary."
+      }
+    ],
+    "remediation_plan": [
+      "Fix Accurate & Grounded: Ensure core principles are accurately represented.",
+      "Fix Beginner-Friendly Language: Introduce an everyday metaphor early to ground intuition.",
+      "Fix Teaches by Concrete Example: Add a realistic scenario showing: (1) Real problem/question, (2) Step-by-step resolution, (3) Practical outcome.",
+      "Fix Clear, No Unexplained Jargon: Define all technical concepts using intuitive everyday analogies before or upon use.",
+      "Fix Covers All Key Pillars: Ensure distinct sections for What it is, Why it matters, and How it works.",
+      "Fix Coherent Pedagogical Flow: Organize with clear numbered section headers and a concluding summary."
+    ],
+    "changes_made_in_next_draft": "Revision will address: Accurate & Grounded, Beginner-Friendly Language, Teaches by Concrete Example, Clear, No Unexplained Jargon, Covers All Key Pillars, Coherent Pedagogical Flow"
+  }
+]

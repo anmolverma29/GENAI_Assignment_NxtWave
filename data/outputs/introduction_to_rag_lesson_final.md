@@ -1,0 +1,1 @@
+RAG uses dense vectors and HNSW.

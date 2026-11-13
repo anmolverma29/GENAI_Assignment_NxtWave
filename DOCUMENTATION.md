@@ -315,3 +315,4 @@ To add a new LLM provider (e.g. Anthropic Claude, Ollama, Groq):
 - **Rejection Audit Log:** [`data/outputs/rag_rejection_log.json`](file:///c:/Users/anmol/Downloads/GENAI_Assignment_NxtWave/data/outputs/rag_rejection_log.json)
 - **Persistent Run History:** [`data/memory/run_history.json`](file:///c:/Users/anmol/Downloads/GENAI_Assignment_NxtWave/data/memory/run_history.json)
 - **Evolved Guidelines:** [`data/memory/evolved_guidelines.json`](file:///c:/Users/anmol/Downloads/GENAI_Assignment_NxtWave/data/memory/evolved_guidelines.json)
+

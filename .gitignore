@@ -25,3 +25,4 @@ Desktop.ini
 
 # Output / logs (keep data folder structure)
 data/outputs/*.tmp
+

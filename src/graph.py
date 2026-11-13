@@ -288,11 +288,25 @@ class LessonPipelineGraph:
         self.memory.save_run(record)
 
         # Write output files to disk
-        Config.FINAL_LESSON_OUTPUT_PATH.write_text(state["current_lesson"], encoding="utf-8")
-        
+        import re
         import json
-        with open(Config.REJECTION_LOG_OUTPUT_PATH, "w", encoding="utf-8") as f:
+        
+        slug = re.sub(r'[^a-zA-Z0-9_]+', '_', state["topic"].lower()).strip('_')[:30]
+        outputs_dir = Config.FINAL_LESSON_OUTPUT_PATH.parent
+        topic_lesson_path = outputs_dir / f"{slug}_lesson_final.md"
+        topic_rejection_path = outputs_dir / f"{slug}_rejection_log.json"
+        
+        topic_lesson_path.write_text(state["current_lesson"], encoding="utf-8")
+        with open(topic_rejection_path, "w", encoding="utf-8") as f:
             json.dump([r.model_dump() for r in rejection_objects], f, indent=2, ensure_ascii=False)
+
+        (outputs_dir / "latest_lesson.md").write_text(state["current_lesson"], encoding="utf-8")
+
+        # Keep rag_lesson_final.md and rag_rejection_log.json preserved for RAG runs
+        if "rag" in state["topic"].lower():
+            Config.FINAL_LESSON_OUTPUT_PATH.write_text(state["current_lesson"], encoding="utf-8")
+            with open(Config.REJECTION_LOG_OUTPUT_PATH, "w", encoding="utf-8") as f:
+                json.dump([r.model_dump() for r in rejection_objects], f, indent=2, ensure_ascii=False)
 
         trace_entry = {
             "node": "finalize",

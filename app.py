@@ -148,6 +148,8 @@ if st.button("🚀 Run Agentic Generation Pipeline", type="primary", use_contain
 if "output" in st.session_state:
     output: PipelineOutput = st.session_state["output"]
 
+    st.success(f"🎓 **Active Topic:** {output.topic}")
+
     # Top Metrics Bar
     col1, col2, col3, col4 = st.columns(4)
     with col1:

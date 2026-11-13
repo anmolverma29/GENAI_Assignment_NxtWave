@@ -1,6 +1,6 @@
-"""Unified LLM Provider supporting Gemini, OpenAI, and Deterministic Mock simulation."""
+"""Unified LLM Provider supporting Gemini, OpenAI, and Topic-Aware Mock simulation."""
 
-import os
+import re
 import json
 import logging
 from abc import ABC, abstractmethod
@@ -116,7 +116,6 @@ class OpenAIProvider(BaseLLMProvider):
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
 
-        # Using OpenAI beta parse for structured outputs
         completion = self.client.beta.chat.completions.parse(
             model=self.model,
             messages=messages,
@@ -127,23 +126,59 @@ class OpenAIProvider(BaseLLMProvider):
 
 
 class MockProvider(BaseLLMProvider):
-    """Deterministic Mock Provider for reliable testing and offline evaluation.
+    """Topic-Aware Deterministic Mock Provider.
     
-    Simulates a realistic iterative refinement trajectory:
-    - Attempt 1: Produces an imperfect draft with technical jargon and missing concrete example.
-    - Attempt 2 (Retry 1): Receives critique and produces a high-quality, beginner-friendly lesson that passes all 6 checkpoints.
+    Generates tailored lessons for ANY given topic:
+    - Attempt 1: Produces an imperfect, technical draft lacking analogies and concrete walkthroughs (fails rubric).
+    - Attempt 2 (Retry 1): Receives critique and outputs a masterclass beginner lesson tailored to that specific topic.
     """
 
     def __init__(self):
         self.generation_count = 0
 
+    def _extract_topic(self, prompt: str) -> str:
+        """Extracts the requested topic from the prompt."""
+        m = re.search(r"topic:\s*['\"]([^'\"]+)['\"]", prompt, re.IGNORECASE)
+        if m:
+            return m.group(1).strip()
+        m2 = re.search(r"TOPIC:\s*([^\r\n]+)", prompt)
+        if m2:
+            return m2.group(1).strip()
+        return "Introduction to RAG"
+
     def generate_text(self, prompt: str, system_prompt: str = "", temperature: float = 0.7) -> str:
         self.generation_count += 1
-        is_retry = "REMEDIATION FEEDBACK FROM PREVIOUS REJECTION" in prompt or "REJECTION CRITIQUE" in prompt or self.generation_count > 1
+        topic = self._extract_topic(prompt)
+        is_retry = (
+            "REMEDIATION FEEDBACK FROM PREVIOUS REJECTION" in prompt or 
+            "REJECTION CRITIQUE" in prompt or 
+            self.generation_count > 1
+        )
 
+        topic_lower = topic.lower()
+
+        # 1. RAG Topic
+        if "rag" in topic_lower or "retrieval-augmented" in topic_lower:
+            return self._generate_rag(is_retry)
+        
+        # 2. Vector Embeddings Topic
+        elif "embedding" in topic_lower or "vector" in topic_lower:
+            return self._generate_embeddings(is_retry, topic)
+        
+        # 3. Prompt Engineering Topic
+        elif "prompt" in topic_lower:
+            return self._generate_prompt_engineering(is_retry, topic)
+        
+        # 4. Fine-Tuning Topic
+        elif "fine-tuning" in topic_lower or "fine tuning" in topic_lower:
+            return self._generate_fine_tuning(is_retry, topic)
+
+        # 5. Universal Generator for ANY OTHER custom topic
+        else:
+            return self._generate_generic_topic(is_retry, topic)
+
+    def _generate_rag(self, is_retry: bool) -> str:
         if not is_retry:
-            # Flawed Initial Draft (Attempt 1):
-            # Intentionally fails on CHK_NO_JARGON and CHK_EXAMPLE
             return (
                 "# Introduction to RAG (Retrieval-Augmented Generation)\n\n"
                 "## What is RAG?\n"
@@ -161,8 +196,6 @@ class MockProvider(BaseLLMProvider):
                 "In conclusion, RAG combines retrieval algorithms with generative models to reduce hallucinations."
             )
         else:
-            # Master Passing Draft (Attempt 2 - After Feedback):
-            # Solves all failures: explains all jargon with metaphors, adds end-to-end concrete example, structured pedagogical flow
             return (
                 "# 🧠 Introduction to RAG: Giving AI an Open-Book Exam\n\n"
                 "Imagine you are taking a tough history exam. In a **closed-book exam**, you must rely entirely "
@@ -228,6 +261,222 @@ class MockProvider(BaseLLMProvider):
                 "- 🔄 **The 3 steps**: Chunk & Index (library) ➔ Retrieve (search) ➔ Generate (answer)."
             )
 
+    def _generate_embeddings(self, is_retry: bool, topic: str) -> str:
+        if not is_retry:
+            return (
+                f"# {topic}\n\n"
+                "## What Are Vector Embeddings?\n"
+                "Vector embeddings are dense mathematical representations projected into a high-dimensional latent space.\n\n"
+                "## Why It Matters\n"
+                "They allow mathematical operations over unstructured textual corpora using cosine similarity matrices.\n\n"
+                "## How It Works\n"
+                "A transformer encoder processes token sequences through multi-head self-attention layers to compute vector coordinates.\n\n"
+                "## Summary\n"
+                "Vectors represent data in metric space."
+            )
+        else:
+            return (
+                f"# 🧭 {topic}: Giving Words a Digital GPS Location\n\n"
+                "Imagine opening a giant map of the world. On this map, cities that are close to each other geographically "
+                "(like Paris and Brussels) are located just a few inches apart, while Tokyo is much farther away.\n\n"
+                "Now, imagine a map where instead of cities, we map **ideas and words**. On this map, words with similar meanings "
+                "(like *dog*, *puppy*, and *canine*) sit right next to each other, while an unrelated word like *refrigerator* sits far across the room.\n\n"
+                "That is the intuitive secret behind **Vector Embeddings**: they give every word, sentence, or document a digital GPS coordinate so computers can measure how related they are.\n\n"
+                "---\n\n"
+                "## 1. What Are Vector Embeddings?\n\n"
+                "Computers cannot understand the feeling or meaning behind words—they only understand numbers. "
+                "An **embedding** is simply a translation: it turns human text into a list of numbers (a numerical fingerprint).\n\n"
+                "- Example: The word *\"king\"* might become `[0.82, -0.14, 0.45, ...]`.\n"
+                "- The word *\"queen\"* will have a nearly identical list of numbers because their meanings are so closely connected.\n\n"
+                "---\n\n"
+                "## 2. Why Do Embeddings Matter? (The Problem It Solves)\n\n"
+                "Before embeddings, computer search was dumb. If you searched an online store for *\"comfy footwear for cold rain\"*, "
+                "an old search engine would look for those exact keywords. If a product was titled *\"Waterproof Winter Boots\"*, it would fail to find it!\n\n"
+                "**Embeddings solve this completely**: because *\"footwear\"* and *\"boots\"* have similar GPS coordinates, the computer knows they mean the exact same concept, even with zero matching words.\n\n"
+                "---\n\n"
+                "## 3. How Embeddings Work (The 3-Step Process)\n\n"
+                "1. **Input Text**: You feed a sentence like *\"I love warm tomato soup\"* into an embedding model.\n"
+                "2. **Calculate Meaning Fingerprint**: The model analyzes context and calculates a coordinates vector (like latitude and longitude for meaning).\n"
+                "3. **Store in a Smart Filing Cabinet (Vector Database)**: These coordinates are saved so the computer can instantly find neighboring concepts in milliseconds.\n\n"
+                "---\n\n"
+                "## 4. Concrete Real-World Walkthrough\n\n"
+                "Let's see embeddings in action in an **E-Commerce Search Engine**:\n\n"
+                "- **User Query**: *\"warm woolen pullover\"*\n"
+                "- **Without Embeddings**: The store searches exact keywords and returns 0 results because the product catalog uses different words.\n"
+                "- **With Embeddings**:\n"
+                "  1. The system turns *\"warm woolen pullover\"* into coordinate `[0.72, 0.44]`.\n"
+                "  2. It scans the catalog coordinates and finds Product #302: *\"Cozy Knitted Winter Sweater\"* located at `[0.71, 0.46]`.\n"
+                "  3. Result: The user gets the exact sweater they wanted, even though the seller never used the word 'pullover'!\n\n"
+                "---\n\n"
+                "## 5. Key Takeaways & Summary\n\n"
+                "- 📍 **Embeddings are GPS coordinates for meaning**: Concepts with similar ideas live close together.\n"
+                "- 🔢 **Bridges words and numbers**: Allows computers to do math on human thoughts and language.\n"
+                "- 🔍 **Powers modern AI**: Semantic search, recommendation feeds, and RAG systems all rely on embeddings."
+            )
+
+    def _generate_prompt_engineering(self, is_retry: bool, topic: str) -> str:
+        if not is_retry:
+            return (
+                f"# {topic}\n\n"
+                "## What is Prompt Engineering?\n"
+                "Prompt engineering is the optimization of input context strings to maximize inference probability distributions.\n\n"
+                "## Why It Matters\n"
+                "It adjusts parametric generation behavior without backpropagation gradient updates.\n\n"
+                "## How It Works\n"
+                "Developers use few-shot in-context exemplars, system metaprompts, and chain-of-thought token sequences.\n\n"
+                "## Summary\n"
+                "Prompts guide transformer sampling."
+            )
+        else:
+            return (
+                f"# ✍️ {topic}: Giving Clear Recipes to an AI Chef\n\n"
+                "Imagine you hired a world-class chef to cook dinner for your guests. If you walk into the kitchen and vaguely say, "
+                "*\"Make something delicious!\"*, the chef might prepare raw sushi, while your guests were hoping for warm pasta.\n\n"
+                "The chef didn't fail because they lacked skill—they failed because your instructions were vague.\n\n"
+                "Now imagine handing the chef a clear request: *\"Please prepare a comforting vegetarian Italian pasta dish for 4 people, mild spice, ready in 30 minutes.\"* "
+                "Now the chef delivers a masterpiece.\n\n"
+                "That is **Prompt Engineering**: the craft of communicating with AI models clearly, giving them context, constraints, and examples so they produce exactly what you need on the first try.\n\n"
+                "---\n\n"
+                "## 1. What is Prompt Engineering?\n\n"
+                "A **prompt** is simply the text or question you type into an AI (like ChatGPT or Claude). "
+                "**Prompt Engineering** is the art and science of structuring that prompt with clarity, role definitions, and rules so the AI gives accurate, high-quality answers.\n\n"
+                "---\n\n"
+                "## 2. Why Does Prompt Engineering Matter?\n\n"
+                "Modern AI models have read almost the entire internet, but they cannot read your mind. Without good prompts, you get:\n"
+                "- Generic, bland answers.\n"
+                "- AI guessing what tone or format you wanted.\n"
+                "- Confident mistakes or hallucinations.\n\n"
+                "Mastering prompt engineering saves hours of editing and unlocks the true power of AI tools.\n\n"
+                "---\n\n"
+                "## 3. How Great Prompts Work (The 4-Part Formula)\n\n"
+                "Every high-performing prompt includes 4 building blocks:\n"
+                "1. **Role**: Who should the AI pretend to be? (*\"Act as a patient senior software engineer...\"*)\n"
+                "2. **Task**: What specific action should it perform? (*\"Review this code for security vulnerabilities...\"*)\n"
+                "3. **Context**: What background information does it need? (*\"This is an internal web tool used by employees...\"*)\n"
+                "4. **Constraints**: What are the strict rules? (*\"Keep it under 3 bullet points, use plain English, no jargon.\"*)\n\n"
+                "---\n\n"
+                "## 4. Concrete Real-World Walkthrough\n\n"
+                "Let's see prompt engineering in action for **Customer Support Email Writing**:\n\n"
+                "- **Vague Prompt (Bad)**: *\"Write an email to a customer whose order was delayed.\"*\n"
+                "- **Result**: A robotic, formal 4-paragraph corporate email that sounds cold and unhelpful.\n\n"
+                "- **Engineered Prompt (Good)**:\n"
+                "  > *\"Role: Empathetic customer support lead at an artisan coffee brand.\n"
+                "  > Task: Write an apology email to customer Sarah whose coffee grinder order #489 is delayed by 3 days.\n"
+                "  > Constraints: Friendly tone, apologize sincerely, offer a free $10 gift card, keep it under 100 words.\"*\n\n"
+                "- **Grounded Output**:\n"
+                "  > *\"Hi Sarah, We are so sorry! Your coffee grinder (Order #489) is running about 3 days behind schedule due to unexpected courier delays. We know you're eager for fresh morning brew, so we've added a $10 gift card to your account as our apology. Tracking updates will hit your inbox tomorrow morning! Warmly, The Coffee Team\"*\n\n"
+                "---\n\n"
+                "## 5. Key Takeaways & Summary\n\n"
+                "- 🍳 **Clear recipe, great meal**: Specific prompts yield exceptional results.\n"
+                "- 🧱 **Use the 4 blocks**: Role, Task, Context, and Constraints.\n"
+                "- 💡 **Show, don't just tell**: Giving 1 or 2 examples inside your prompt dramatically improves accuracy."
+            )
+
+    def _generate_fine_tuning(self, is_retry: bool, topic: str) -> str:
+        if not is_retry:
+            return (
+                f"# {topic}\n\n"
+                "## What is Fine-Tuning?\n"
+                "Fine-tuning adapts model parameters via supervised gradient descent on domain-specific datasets.\n\n"
+                "## Why It Matters\n"
+                "It modifies internal attention weights rather than appending in-context token prompts.\n\n"
+                "## How It Works\n"
+                "Model weights are updated using Low-Rank Adaptation (LoRA) matrices over target task loss functions.\n\n"
+                "## Summary\n"
+                "Fine-tuning modifies weights."
+            )
+        else:
+            return (
+                f"# 🎓 {topic}: Medical School vs. Open-Book Reference\n\n"
+                "Imagine you want an assistant to help review hospital patient records. You have two options:\n\n"
+                "- **Option A (Fine-Tuning)**: Send your assistant through intensive medical residency training for 6 months. They internalize clinical instincts, medical vocabulary, and bedside manner directly into their brain.\n"
+                "- **Option B (RAG - Retrieval)**: Hand a smart general assistant a medical reference textbook to look up facts during an open-book exam.\n\n"
+                "This comparison explains the essential choice in modern AI: **Fine-Tuning changes how the AI behaves and thinks internally**, while RAG gives the AI external reference notes to read.\n\n"
+                "---\n\n"
+                "## 1. What is Fine-Tuning?\n\n"
+                "**Fine-Tuning** is the process of taking an already trained, smart AI model and training it further on a specialized set of examples so it learns a specific style, tone, or skill.\n\n"
+                "---\n\n"
+                "## 2. Why Does Fine-Tuning Matter? (When to Use It)\n\n"
+                "Fine-tuning is ideal when you need to teach the AI:\n"
+                "- **A specialized style or voice** (e.g., writing like a patent attorney or a Shakespearean poet).\n"
+                "- **Strict output structures** (e.g., always returning precise JSON with zero conversational filler).\n"
+                "- **Complex domain reasoning** (e.g., medical triage logic or financial auditing).\n\n"
+                "---\n\n"
+                "## 3. How Fine-Tuning Works (The 3 Steps)\n\n"
+                "1. **Curate High-Quality Examples**: Collect 500–2,000 pairs of ideal inputs and outputs.\n"
+                "2. **Train the Weights**: Run training algorithms that gently update the AI's internal mathematical connections.\n"
+                "3. **Deploy the Custom Specialist**: The model now responds in the desired format automatically without needing lengthy instructions in every prompt.\n\n"
+                "---\n\n"
+                "## 4. Concrete Real-World Walkthrough\n\n"
+                "Let's see Fine-Tuning in action for a **Legal Contract Analyzer**:\n\n"
+                "- **User Scenario**: A law firm needs an AI that extracts indemnification clauses into strict tabular format.\n"
+                "- **Standard AI**: Writes polite small talk: *\"Certainly! Here is an analysis of your contract clauses...\"* (Breaks automated software pipelines!).\n"
+                "- **Fine-Tuned AI**:\n"
+                "  1. Trained on 1,000 legal contracts with zero conversational fluff.\n"
+                "  2. Input: Raw legal paragraph.\n"
+                "  3. Output: Immediately outputs the exact clause classification code without small talk.\n\n"
+                "---\n\n"
+                "## 5. Key Takeaways & Summary\n\n"
+                "- 🧠 **Fine-tuning alters the AI's internal instincts**: It teaches style, tone, and formatting.\n"
+                "- 📚 **RAG teaches knowledge; Fine-tuning teaches behavior**.\n"
+                "- ⚖️ **Combine both for best results**: Fine-tune for form and tone; use RAG for fresh, verified facts."
+            )
+
+    def _generate_generic_topic(self, is_retry: bool, topic: str) -> str:
+        clean_name = topic.replace("Introduction to", "").replace("Introduction", "").strip() or topic
+        if not is_retry:
+            return (
+                f"# Introduction to {clean_name}\n\n"
+                f"## What is {clean_name}?\n"
+                f"{clean_name} is an advanced technological architecture designed to optimize computational state spaces.\n\n"
+                f"## Why It Matters\n"
+                f"Standard systems suffer from high latency and non-deterministic error propagation across distributed nodes.\n\n"
+                f"## How It Works\n"
+                f"The mechanism executes through multi-layer abstraction pipelines using specialized algorithmic protocols and parameter matrices.\n\n"
+                f"## Summary\n"
+                f"In conclusion, {clean_name} provides robust systemic optimization."
+            )
+        else:
+            return (
+                f"# 💡 Introduction to {clean_name}: A Beginner's Guide\n\n"
+                f"Imagine you are trying to assemble a complex piece of furniture with 200 parts. If the instructions are written "
+                f"in dense engineering blueprints, you will get frustrated and make mistakes.\n\n"
+                f"Now imagine having a friendly expert standing beside you, handing you the exact bolt you need and explaining "
+                f"step-by-step why each piece matters in simple, everyday language.\n\n"
+                f"That is the goal of this guide: to demystify **{clean_name}** and show you what it is, why it matters, and how it works—even if you are starting from zero.\n\n"
+                f"---\n\n"
+                f"## 1. What is {clean_name}?\n\n"
+                f"At its core, **{clean_name}** is a solution to a fundamental problem. In plain English:\n"
+                f"It is a modern technique that simplifies complex tasks by organizing information, automating tedious steps, and ensuring high accuracy.\n\n"
+                f"---\n\n"
+                f"## 2. Why Does {clean_name} Matter? (The Problems It Solves)\n\n"
+                f"Before {clean_name}, people and systems faced three major roadblocks:\n\n"
+                f"1. **High Inefficiency**: Tasks that should take seconds took hours of manual guesswork.\n"
+                f"2. **Inconsistent Quality**: Without a clear system, errors and inconsistencies slipped through unnoticed.\n"
+                f"3. **Scalability Bottlenecks**: As demand grew, traditional methods broke down under the workload.\n\n"
+                f"**{clean_name} solves these roadblocks** by introducing standardized, repeatable workflows that anyone can rely on.\n\n"
+                f"---\n\n"
+                f"## 3. How {clean_name} Works (The 3-Step Journey)\n\n"
+                f"Think of {clean_name} as a simple 3-stage assembly line:\n\n"
+                f"1. **Input & Preparation**: The system receives the initial request or raw information and breaks it down into clear, structured components.\n"
+                f"2. **Processing & Alignment**: It applies core rules and intelligence to match the input with the best possible approach.\n"
+                f"3. **Output & Delivery**: It generates a polished, verified result ready for immediate practical use.\n\n"
+                f"---\n\n"
+                f"## 4. Concrete Real-World Walkthrough\n\n"
+                f"Let's look at a concrete real-world scenario showing {clean_name} in action:\n\n"
+                f"- **The Scenario**: A growing team needs to handle hundreds of incoming client requests every day.\n"
+                f"- **Without {clean_name}**: Team members manually read every ticket, guess the best response, and often give conflicting answers.\n"
+                f"- **With {clean_name}**:\n"
+                f"  1. **User Request**: A client submits an urgent support inquiry.\n"
+                f"  2. **System Processing**: {clean_name} automatically identifies the request intent, consults verified documentation, and crafts a grounded draft.\n"
+                f"  3. **Verified Result**: The client receives a fast, consistent, and accurate resolution within minutes.\n\n"
+                f"---\n\n"
+                f"## 5. Key Takeaways & Summary\n\n"
+                f"- 🎯 **{clean_name} solves real problems**: It replaces manual confusion with structured simplicity.\n"
+                f"- 🪜 **Follows 3 simple steps**: Input Preparation ➔ Intelligent Processing ➔ Verified Output.\n"
+                f"- 🚀 **Accessible to anyone**: You don't need a computer science degree to understand and benefit from it."
+            )
+
     def generate_structured(
         self,
         prompt: str,
@@ -235,80 +484,83 @@ class MockProvider(BaseLLMProvider):
         response_model: Type[BaseModel],
         temperature: float = 0.1
     ) -> BaseModel:
-        # In mock evaluation, analyze the prompt content to dynamically evaluate
         from src.models import RubricEvaluation, CheckpointResult, CheckpointID
 
-        # If evaluating a draft:
         lesson_text = prompt
+        text_lower = lesson_text.lower()
         
-        # Check presence of jargon without explanation
-        has_dense_jargon = "high-dimensional dense vector embeddings" in lesson_text and "fingerprint" not in lesson_text
-        has_hnsw = "HNSW" in lesson_text and "filing cabinet" not in lesson_text
-        has_cosine = "cosine similarity search" in lesson_text and "matching" not in lesson_text.lower()
-        jargon_failed = has_dense_jargon or has_hnsw or has_cosine
+        # 1. Check presence of jargon without explanation
+        dense_jargon_found = any(j in text_lower for j in [
+            "high-dimensional dense", "hnsw", "cosine similarity matrix", "latent space", 
+            "token distribution", "few-shot in-context exemplars", "gradient descent", 
+            "parametric generation behavior", "computational state spaces"
+        ])
+        has_analogy_support = any(a in text_lower for a in [
+            "fingerprint", "cabinet", "recipe", "exam", "chef", "gps", "library", "intern", "blueprint", "map"
+        ])
+        jargon_failed = dense_jargon_found and not has_analogy_support
 
-        # Check concrete example
-        has_concrete_example = ("NovaWatch" in lesson_text or "fictional" in lesson_text.lower() or 
-                                ("user question" in lesson_text.lower() and "without rag" in lesson_text.lower()))
+        # 2. Check concrete example
+        has_concrete_example = any(ex in text_lower for ex in [
+            "novawatch", "walkthrough", "scenario", "user query", "user question", "sarah", "product #302", "case study"
+        ]) and any(res in text_lower for res in ["result", "grounded", "answer", "output", "resolution"])
 
-        # Check beginner friendly
-        is_beginner = "open-book" in lesson_text.lower() or "exam" in lesson_text.lower() or "library" in lesson_text.lower()
-        if not is_beginner and jargon_failed:
-            beginner_passed = False
-        else:
-            beginner_passed = True
+        # 3. Check beginner friendly
+        beginner_passed = any(b in text_lower for b in [
+            "imagine", "open-book", "recipe", "gps", "chef", "library", "exam", "think of", "friendly", "furniture"
+        ])
 
-        # Check key points
-        covers_what = "what is rag" in lesson_text.lower() or "retrieval-augmented generation" in lesson_text.lower()
-        covers_why = "why" in lesson_text.lower() and ("hallucinat" in lesson_text.lower() or "problem" in lesson_text.lower())
-        covers_how = "how" in lesson_text.lower() and ("step" in lesson_text.lower() or "retrieve" in lesson_text.lower())
+        # 4. Check key points (What, Why, How)
+        covers_what = any(w in text_lower for w in ["what is", "what are", "## 1."])
+        covers_why = any(w in text_lower for w in ["why", "problem", "matters", "## 2."])
+        covers_how = any(h in text_lower for h in ["how", "step", "journey", "process", "## 3."])
         key_points_passed = covers_what and covers_why and covers_how
 
-        # Check accuracy
-        accurate_passed = "retrieval" in lesson_text.lower() and "fine-tuning" not in lesson_text.lower() or "instead of changing" in lesson_text.lower()
+        # 5. Check accuracy & grounding
+        accurate_passed = len(lesson_text.strip()) > 150 and "#" in lesson_text
 
-        # Check coherent flow
-        coherent_passed = ("#" in lesson_text) and ("summary" in lesson_text.lower() or "takeaway" in lesson_text.lower())
+        # 6. Check coherent flow
+        coherent_passed = ("#" in lesson_text) and any(s in text_lower for s in ["summary", "takeaway", "key takeaways", "conclusion"])
 
         checkpoints = [
             CheckpointResult(
                 checkpoint_id=CheckpointID.ACCURACY,
                 name="Accurate & Grounded",
                 passed=accurate_passed,
-                reason="Concepts are accurately grounded in modern RAG architecture." if accurate_passed else "Contains factual errors or misleading definitions.",
-                evidence="RAG correctly separates retrieval from generation." if accurate_passed else "Lacks factual clarity.",
-                remediation="" if accurate_passed else "Ensure RAG is distinguished from fine-tuning."
+                reason="Concepts are accurately grounded and technically sound." if accurate_passed else "Contains inaccurate statements or lacks substance.",
+                evidence="Accurate technical structure." if accurate_passed else "Insufficient factual grounding.",
+                remediation="" if accurate_passed else "Ensure core principles are accurately represented."
             ),
             CheckpointResult(
                 checkpoint_id=CheckpointID.BEGINNER,
                 name="Beginner-Friendly Language",
                 passed=beginner_passed,
-                reason="Uses intuitive open-book exam and library analogies accessible to complete novices." if beginner_passed else "Too academic and dry; assumes prior familiarity with AI terminology.",
-                evidence="Analogy: 'open-book exam' used effectively." if beginner_passed else "Relies on technical terminology without framing.",
-                remediation="" if beginner_passed else "Introduce the open-book exam metaphor early to ground intuition."
+                reason="Uses intuitive real-world analogies accessible to complete novices." if beginner_passed else "Too academic and dry; assumes prior familiarity with technical terminology.",
+                evidence="Analogy grounds reader intuition." if beginner_passed else "Relies on technical terminology without beginner framing.",
+                remediation="" if beginner_passed else "Introduce an everyday metaphor early to ground intuition."
             ),
             CheckpointResult(
                 checkpoint_id=CheckpointID.EXAMPLE,
                 name="Teaches by Concrete Example",
                 passed=has_concrete_example,
-                reason="Includes a full walkthrough with a customer support query, retrieved document snippet, and comparison." if has_concrete_example else "Lacks an end-to-end real-world walkthrough demonstrating query, retrieval, and generation.",
-                evidence="Walkthrough: NovaWatch X heated sauna support inquiry." if has_concrete_example else "No concrete user inquiry with specific retrieved text provided.",
-                remediation="" if has_concrete_example else "Add a realistic scenario showing: (1) User asks a question, (2) System retrieves specific chunk, (3) Model answers using that chunk."
+                reason="Includes a full end-to-end real-world walkthrough showing context, action, and verified outcome." if has_concrete_example else "Lacks an end-to-end real-world walkthrough demonstrating practical application.",
+                evidence="Concrete walkthrough scenario included." if has_concrete_example else "No concrete user inquiry with specific scenario provided.",
+                remediation="" if has_concrete_example else "Add a realistic scenario showing: (1) Real problem/question, (2) Step-by-step resolution, (3) Practical outcome."
             ),
             CheckpointResult(
                 checkpoint_id=CheckpointID.NO_JARGON,
                 name="Clear, No Unexplained Jargon",
                 passed=not jargon_failed,
-                reason="All technical terms (embeddings, chunking, vector database) are defined before or alongside use." if not jargon_failed else "Introduced technical jargon (dense embeddings, HNSW, cosine similarity) without defining them for a beginner.",
-                evidence="Embeddings defined as 'numerical meaning fingerprints', chunking as 'index cards'." if not jargon_failed else "Found: 'high-dimensional dense vector embeddings', 'HNSW vector database' with no layman explanation.",
-                remediation="" if not jargon_failed else "Define embeddings using the 'numerical fingerprint' analogy and vector DB as 'smart filing cabinet'."
+                reason="All technical terms are introduced with everyday plain-English analogies." if not jargon_failed else "Introduced technical jargon without defining them for a beginner.",
+                evidence="All terms defined simply." if not jargon_failed else "Found technical domain jargon without layman explanation.",
+                remediation="" if not jargon_failed else "Define all technical concepts using intuitive everyday analogies before or upon use."
             ),
             CheckpointResult(
                 checkpoint_id=CheckpointID.KEY_POINTS,
                 name="Covers All Key Pillars",
                 passed=key_points_passed,
-                reason="Thoroughly covers What it is, Why it matters (hallucinations/freshness/private data), and How it works (3-step pipeline)." if key_points_passed else "Fails to cover all three pillars adequately.",
-                evidence="Sections 1, 2, and 3 explicitly cover What, Why, and How." if key_points_passed else "Missing clear coverage of all three pillars.",
+                reason="Thoroughly covers What it is, Why it matters (problems it solves), and How it works step-by-step." if key_points_passed else "Fails to cover all three foundational pillars adequately.",
+                evidence="Distinct coverage of What, Why, and How." if key_points_passed else "Missing clear coverage of all three pillars.",
                 remediation="" if key_points_passed else "Ensure distinct sections for What it is, Why it matters, and How it works."
             ),
             CheckpointResult(
@@ -358,4 +610,3 @@ def get_llm_provider(provider_type: Optional[str] = None) -> BaseLLMProvider:
             return MockProvider()
     else:
         return MockProvider()
-

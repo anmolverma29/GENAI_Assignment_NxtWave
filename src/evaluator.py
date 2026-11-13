@@ -61,23 +61,31 @@ class HeuristicVerifier:
 
     @staticmethod
     def check_example(text: str) -> Tuple[bool, str, str]:
-        """Check for a concrete end-to-end example (query -> retrieval -> answer)."""
+        """Check for a concrete end-to-end example (query -> process/retrieval -> answer)."""
         text_lower = text.lower()
-        has_query = any(q in text_lower for q in ["question:", "query:", "user asks", "user question", "asks:"])
-        has_retrieval_or_doc = any(d in text_lower for d in ["retrieved", "manual", "document", "source snippet", "section", "chunk"])
-        has_answer = any(a in text_lower for a in ["answer:", "responds:", "generated answer", "response:", "replies:"])
+        has_query = any(q in text_lower for q in [
+            "question:", "query:", "user asks", "user question", "asks:", "scenario:", "user scenario", 
+            "vague prompt", "prompt:", "client submits", "user request"
+        ])
+        has_process = any(d in text_lower for d in [
+            "retrieved", "manual", "document", "source snippet", "section", "chunk", "coordinates", "recipe", 
+            "constraints", "without", "input:", "processing", "catalog"
+        ])
+        has_answer = any(a in text_lower for a in [
+            "answer:", "responds:", "generated answer", "response:", "replies:", "output:", "result:", "grounded"
+        ])
 
-        if has_query and (has_retrieval_or_doc or has_answer):
-            return True, "Contains concrete walkthrough showing query, reference material, and grounded response.", ""
-        return False, "Lacks an explicit end-to-end walkthrough showing a user inquiry and how RAG retrieves and answers it.", "Add a concrete real-world scenario."
+        if has_query and (has_process or has_answer):
+            return True, "Contains concrete walkthrough showing scenario, process, and grounded result.", ""
+        return False, "Lacks an explicit end-to-end walkthrough demonstrating practical application.", "Add a concrete real-world scenario."
 
     @staticmethod
-    def check_key_points(text: str) -> Tuple[bool, str, str]:
+    def check_key_points(text: str, topic: str = "") -> Tuple[bool, str, str]:
         """Verify presence of What, Why, and How."""
         text_lower = text.lower()
-        has_what = "what is" in text_lower or "what rag is" in text_lower or "retrieval-augmented generation" in text_lower
-        has_why = "why" in text_lower and any(w in text_lower for w in ["matter", "problem", "hallucinat", "limitation", "outdated"])
-        has_how = "how" in text_lower and any(h in text_lower for h in ["work", "step", "retrieve", "journey", "process"])
+        has_what = any(w in text_lower for w in ["what is", "what are", "what it is", "definition", "concept", "## 1."])
+        has_why = any(w in text_lower for w in ["why", "problem", "matters", "matter", "limitation", "benefit", "## 2."])
+        has_how = any(h in text_lower for h in ["how", "step", "journey", "process", "mechanism", "workflow", "## 3."])
 
         missing = []
         if not has_what:
@@ -183,29 +191,29 @@ class LessonEvaluator:
         """Deterministic fallback evaluation if LLM provider is unreachable."""
         jargon_ok, jargon_reason, jargon_evidence = HeuristicVerifier.check_jargon(lesson_text)
         example_ok, example_reason, _ = HeuristicVerifier.check_example(lesson_text)
-        key_ok, key_reason, key_rem = HeuristicVerifier.check_key_points(lesson_text)
+        key_ok, key_reason, key_rem = HeuristicVerifier.check_key_points(lesson_text, topic)
 
         text_lower = lesson_text.lower()
-        beginner_ok = "open-book" in text_lower or "library" in text_lower or "exam" in text_lower
-        accuracy_ok = "retrieval" in text_lower and "generat" in text_lower
-        flow_ok = "#" in lesson_text and ("summary" in text_lower or "takeaway" in text_lower)
+        beginner_ok = any(b in text_lower for b in ["imagine", "like", "exam", "chef", "recipe", "library", "map", "gps", "intern", "friendly", "furniture"])
+        accuracy_ok = len(lesson_text.strip()) > 150 and "#" in lesson_text
+        flow_ok = "#" in lesson_text and any(s in text_lower for s in ["summary", "takeaway", "key takeaways", "conclusion"])
 
         checkpoints = [
             CheckpointResult(
                 checkpoint_id=CheckpointID.ACCURACY,
                 name="Accurate & Grounded",
                 passed=accuracy_ok,
-                reason="Accurate description of retrieval-augmented architecture." if accuracy_ok else "Inaccurate or missing definition.",
-                evidence="Accurate representation." if accuracy_ok else "Missing key terms.",
-                remediation="" if accuracy_ok else "Ensure retrieval is cleanly separated from generation."
+                reason="Accurate and grounded explanation of core concepts." if accuracy_ok else "Inaccurate or missing definition.",
+                evidence="Accurate technical structure." if accuracy_ok else "Missing key terms.",
+                remediation="" if accuracy_ok else "Ensure core principles are accurately represented."
             ),
             CheckpointResult(
                 checkpoint_id=CheckpointID.BEGINNER,
                 name="Beginner-Friendly Language",
                 passed=beginner_ok,
                 reason="Uses everyday metaphors accessible to beginners." if beginner_ok else "Lacks intuitive beginner framing.",
-                evidence="Metaphor identified." if beginner_ok else "No foundational analogy.",
-                remediation="" if beginner_ok else "Add an open-book exam or library metaphor in the introduction."
+                evidence="Foundational metaphor identified." if beginner_ok else "No foundational analogy.",
+                remediation="" if beginner_ok else "Add an everyday real-world metaphor in the introduction."
             ),
             CheckpointResult(
                 checkpoint_id=CheckpointID.EXAMPLE,

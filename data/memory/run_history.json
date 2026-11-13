@@ -1,0 +1,155 @@
+[
+  {
+    "run_id": "run_20261113_223212",
+    "timestamp": "2026-11-13T22:32:12.931304",
+    "topic": "Introduction to RAG",
+    "status": "APPROVED",
+    "total_attempts": 2,
+    "final_pass_rate": 1.0,
+    "rejection_count": 1,
+    "rejection_log": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-11-13T22:32:12.865504",
+        "failed_checkpoints": [
+          "CHK_BEGINNER",
+          "CHK_EXAMPLE",
+          "CHK_NO_JARGON"
+        ],
+        "critique_summary": "The lesson failed 3 critical checkpoints: CHK_BEGINNER, CHK_EXAMPLE, CHK_NO_JARGON. Must address specific remediation feedback.",
+        "detailed_failures": [
+          {
+            "checkpoint": "Beginner-Friendly Language",
+            "id": "CHK_BEGINNER",
+            "reason": "Too academic and dry; assumes prior familiarity with AI terminology.",
+            "evidence": "Relies on technical terminology without framing.",
+            "remediation": "Introduce the open-book exam metaphor early to ground intuition."
+          },
+          {
+            "checkpoint": "Teaches by Concrete Example",
+            "id": "CHK_EXAMPLE",
+            "reason": "Lacks an end-to-end real-world walkthrough demonstrating query, retrieval, and generation.",
+            "evidence": "No concrete user inquiry with specific retrieved text provided.",
+            "remediation": "Add a realistic scenario showing: (1) User asks a question, (2) System retrieves specific chunk, (3) Model answers using that chunk."
+          },
+          {
+            "checkpoint": "Clear, No Unexplained Jargon",
+            "id": "CHK_NO_JARGON",
+            "reason": "Introduced technical jargon (dense embeddings, HNSW, cosine similarity) without defining them for a beginner.",
+            "evidence": "Found: 'high-dimensional dense vector embeddings', 'HNSW vector database' with no layman explanation.",
+            "remediation": "Define embeddings using the 'numerical fingerprint' analogy and vector DB as 'smart filing cabinet'."
+          }
+        ],
+        "remediation_plan": [
+          "Fix Beginner-Friendly Language: Introduce the open-book exam metaphor early to ground intuition.",
+          "Fix Teaches by Concrete Example: Add a realistic scenario showing: (1) User asks a question, (2) System retrieves specific chunk, (3) Model answers using that chunk.",
+          "Fix Clear, No Unexplained Jargon: Define embeddings using the 'numerical fingerprint' analogy and vector DB as 'smart filing cabinet'."
+        ],
+        "changes_made_in_next_draft": "Revision will address: Beginner-Friendly Language, Teaches by Concrete Example, Clear, No Unexplained Jargon"
+      }
+    ],
+    "final_lesson": "# 🧠 Introduction to RAG: Giving AI an Open-Book Exam\n\nImagine you are taking a tough history exam. In a **closed-book exam**, you must rely entirely on what you memorized months ago. If you forgot a date or facts changed, you might guess or get it wrong.\n\nNow imagine an **open-book exam**. You have your textbook and notes right beside you. When a question is asked, you flip to the exact chapter, read the verified fact, and write a clear, accurate answer.\n\nThat is the core idea behind **RAG (Retrieval-Augmented Generation)**. It transforms AI from a student taking a closed-book exam into a researcher taking an open-book exam.\n\n---\n\n## 1. What is RAG?\n\n**RAG** stands for **Retrieval-Augmented Generation**:\n- **Retrieval**: Finding the right reference information from an external source (like your company's documents, manuals, or articles).\n- **Augmented**: Adding those retrieved facts into the AI's question prompt as reference context.\n- **Generation**: Having the AI read that context and generate a natural, helpful, and accurate response.\n\nIn plain words: **RAG is an AI technique that looks up verified facts in a library before answering your question.**\n\n---\n\n## 2. Why Does RAG Matter? (The Problem It Solves)\n\nStandard AI language models (like ChatGPT or Claude) are incredibly smart, but they suffer from three major limitations:\n\n1. **Hallucinations (Confident Guesswork)**: When an AI doesn't know something, it can invent plausible-sounding but false answers.\n2. **Outdated Knowledge (Knowledge Cutoff)**: Models only know what was in their training data. They don't know what happened yesterday or this morning.\n3. **No Private Company Knowledge**: A generic model knows about world history, but it has never seen your company's internal HR policies, customer support tickets, or confidential product roadmaps.\n\n**Why not just retrain the AI?**\nRetraining (or fine-tuning) a large model takes days, costs thousands of dollars, and must be repeated every time a document changes. **RAG solves this elegantly**: instead of changing the AI's brain, you simply hand it the right page to read on the fly.\n\n---\n\n## 3. How RAG Works (The 3-Step Journey)\n\nThink of RAG as a 3-step assembly line:\n\n```\n[Your Documents] ──► 1. Chunk & Index ──► 2. Retrieve Relevant Page ──► 3. Generate Grounded Answer\n```\n\n### Step 1: Ingestion & Indexing (Organizing the Library)\n- **Chunking**: Large documents (like a 200-page PDF) are cut into small, bite-sized index cards (paragraphs of 200–500 words).\n- **Embeddings (Numerical Meaning Fingerprints)**: Just like humans use keywords, computers convert text into a list of numbers called an *embedding*. Sentences with similar meanings get similar number patterns.\n- **Vector Database (The Smart Filing Cabinet)**: A specialized database that stores these chunks and their numerical fingerprints so we can find matching ideas in milliseconds.\n\n### Step 2: Retrieval (Finding the Relevant Index Cards)\n- When a user asks a question, the system turns the question into a numerical fingerprint.\n- It scans the vector database and retrieves the top 2 or 3 chunks that best match the question's meaning.\n\n### Step 3: Generation (Writing the Answer)\n- The system builds a new prompt for the AI:\n  > *\"You are a helpful assistant. Use ONLY the following reference notes to answer the user's question:\n  > [Retrieved Reference Chunks]\n  > User Question: ...\"*\n- The AI reads the provided notes and crafts an accurate, grounded reply.\n\n---\n\n## 4. Concrete Real-World Walkthrough\n\nLet's see RAG in action for **NovaTech Smartwatch Customer Support**:\n\n- **User Question**: *\"Can I wear my NovaWatch X in a heated sauna?\"*\n- **Without RAG**: The generic model might say: *\"Most smartwatches are water-resistant up to 50 meters, so you should be fine!\"* (Result: The user damages their watch because high heat ruins battery seals!).\n- **With RAG**:\n  1. **Retrieve**: The system searches NovaTech's 80-page user manual and retrieves Section 4.2:\n     > *\"Warning: The NovaWatch X is water-resistant up to 5 ATM, but MUST NOT be worn in steam rooms, saunas, or hot tubs exceeding 45°C as steam damages the protective acoustic membranes.\"*\n  2. **Augment**: The system constructs the prompt:\n     > *\"Reference Manual: [Section 4.2 Warning]\n     > Question: Can I wear my NovaWatch X in a heated sauna?\"*\n  3. **Generate**: The AI responds:\n     > *\"No, you should not wear your NovaWatch X in a sauna. According to Section 4.2 of the manual, steam and temperatures exceeding 45°C can damage the watch's protective seals.\"*\n\nThe answer is accurate, safe, and directly cites company policy!\n\n---\n\n## 5. Key Takeaways & Summary\n\n- 📚 **RAG is an open-book exam for AI**: It retrieves real facts before generating an answer.\n- 🛡️ **Prevents hallucinations**: The AI answers based on verified documents, not guesswork.\n- ⚡ **Fresh & private data**: You can update your knowledge base instantly without expensive model retraining.\n- 🔄 **The 3 steps**: Chunk & Index (library) ➔ Retrieve (search) ➔ Generate (answer)."
+  },
+  {
+    "run_id": "run_20261113_232514",
+    "timestamp": "2026-11-13T23:25:14.603523",
+    "topic": "Introduction to RAG",
+    "status": "APPROVED",
+    "total_attempts": 2,
+    "final_pass_rate": 1.0,
+    "rejection_count": 1,
+    "rejection_log": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-11-13T23:25:14.539455",
+        "failed_checkpoints": [
+          "CHK_BEGINNER",
+          "CHK_EXAMPLE",
+          "CHK_NO_JARGON"
+        ],
+        "critique_summary": "The lesson failed 3 critical checkpoints: CHK_BEGINNER, CHK_EXAMPLE, CHK_NO_JARGON. Must address specific remediation feedback.",
+        "detailed_failures": [
+          {
+            "checkpoint": "Beginner-Friendly Language",
+            "id": "CHK_BEGINNER",
+            "reason": "Too academic and dry; assumes prior familiarity with AI terminology.",
+            "evidence": "Relies on technical terminology without framing.",
+            "remediation": "Introduce the open-book exam metaphor early to ground intuition."
+          },
+          {
+            "checkpoint": "Teaches by Concrete Example",
+            "id": "CHK_EXAMPLE",
+            "reason": "Lacks an end-to-end real-world walkthrough demonstrating query, retrieval, and generation.",
+            "evidence": "No concrete user inquiry with specific retrieved text provided.",
+            "remediation": "Add a realistic scenario showing: (1) User asks a question, (2) System retrieves specific chunk, (3) Model answers using that chunk."
+          },
+          {
+            "checkpoint": "Clear, No Unexplained Jargon",
+            "id": "CHK_NO_JARGON",
+            "reason": "Introduced technical jargon (dense embeddings, HNSW, cosine similarity) without defining them for a beginner.",
+            "evidence": "Found: 'high-dimensional dense vector embeddings', 'HNSW vector database' with no layman explanation.",
+            "remediation": "Define embeddings using the 'numerical fingerprint' analogy and vector DB as 'smart filing cabinet'."
+          }
+        ],
+        "remediation_plan": [
+          "Fix Beginner-Friendly Language: Introduce the open-book exam metaphor early to ground intuition.",
+          "Fix Teaches by Concrete Example: Add a realistic scenario showing: (1) User asks a question, (2) System retrieves specific chunk, (3) Model answers using that chunk.",
+          "Fix Clear, No Unexplained Jargon: Define embeddings using the 'numerical fingerprint' analogy and vector DB as 'smart filing cabinet'."
+        ],
+        "changes_made_in_next_draft": "Revision will address: Beginner-Friendly Language, Teaches by Concrete Example, Clear, No Unexplained Jargon"
+      }
+    ],
+    "final_lesson": "# 🧠 Introduction to RAG: Giving AI an Open-Book Exam\n\nImagine you are taking a tough history exam. In a **closed-book exam**, you must rely entirely on what you memorized months ago. If you forgot a date or facts changed, you might guess or get it wrong.\n\nNow imagine an **open-book exam**. You have your textbook and notes right beside you. When a question is asked, you flip to the exact chapter, read the verified fact, and write a clear, accurate answer.\n\nThat is the core idea behind **RAG (Retrieval-Augmented Generation)**. It transforms AI from a student taking a closed-book exam into a researcher taking an open-book exam.\n\n---\n\n## 1. What is RAG?\n\n**RAG** stands for **Retrieval-Augmented Generation**:\n- **Retrieval**: Finding the right reference information from an external source (like your company's documents, manuals, or articles).\n- **Augmented**: Adding those retrieved facts into the AI's question prompt as reference context.\n- **Generation**: Having the AI read that context and generate a natural, helpful, and accurate response.\n\nIn plain words: **RAG is an AI technique that looks up verified facts in a library before answering your question.**\n\n---\n\n## 2. Why Does RAG Matter? (The Problem It Solves)\n\nStandard AI language models (like ChatGPT or Claude) are incredibly smart, but they suffer from three major limitations:\n\n1. **Hallucinations (Confident Guesswork)**: When an AI doesn't know something, it can invent plausible-sounding but false answers.\n2. **Outdated Knowledge (Knowledge Cutoff)**: Models only know what was in their training data. They don't know what happened yesterday or this morning.\n3. **No Private Company Knowledge**: A generic model knows about world history, but it has never seen your company's internal HR policies, customer support tickets, or confidential product roadmaps.\n\n**Why not just retrain the AI?**\nRetraining (or fine-tuning) a large model takes days, costs thousands of dollars, and must be repeated every time a document changes. **RAG solves this elegantly**: instead of changing the AI's brain, you simply hand it the right page to read on the fly.\n\n---\n\n## 3. How RAG Works (The 3-Step Journey)\n\nThink of RAG as a 3-step assembly line:\n\n```\n[Your Documents] ──► 1. Chunk & Index ──► 2. Retrieve Relevant Page ──► 3. Generate Grounded Answer\n```\n\n### Step 1: Ingestion & Indexing (Organizing the Library)\n- **Chunking**: Large documents (like a 200-page PDF) are cut into small, bite-sized index cards (paragraphs of 200–500 words).\n- **Embeddings (Numerical Meaning Fingerprints)**: Just like humans use keywords, computers convert text into a list of numbers called an *embedding*. Sentences with similar meanings get similar number patterns.\n- **Vector Database (The Smart Filing Cabinet)**: A specialized database that stores these chunks and their numerical fingerprints so we can find matching ideas in milliseconds.\n\n### Step 2: Retrieval (Finding the Relevant Index Cards)\n- When a user asks a question, the system turns the question into a numerical fingerprint.\n- It scans the vector database and retrieves the top 2 or 3 chunks that best match the question's meaning.\n\n### Step 3: Generation (Writing the Answer)\n- The system builds a new prompt for the AI:\n  > *\"You are a helpful assistant. Use ONLY the following reference notes to answer the user's question:\n  > [Retrieved Reference Chunks]\n  > User Question: ...\"*\n- The AI reads the provided notes and crafts an accurate, grounded reply.\n\n---\n\n## 4. Concrete Real-World Walkthrough\n\nLet's see RAG in action for **NovaTech Smartwatch Customer Support**:\n\n- **User Question**: *\"Can I wear my NovaWatch X in a heated sauna?\"*\n- **Without RAG**: The generic model might say: *\"Most smartwatches are water-resistant up to 50 meters, so you should be fine!\"* (Result: The user damages their watch because high heat ruins battery seals!).\n- **With RAG**:\n  1. **Retrieve**: The system searches NovaTech's 80-page user manual and retrieves Section 4.2:\n     > *\"Warning: The NovaWatch X is water-resistant up to 5 ATM, but MUST NOT be worn in steam rooms, saunas, or hot tubs exceeding 45°C as steam damages the protective acoustic membranes.\"*\n  2. **Augment**: The system constructs the prompt:\n     > *\"Reference Manual: [Section 4.2 Warning]\n     > Question: Can I wear my NovaWatch X in a heated sauna?\"*\n  3. **Generate**: The AI responds:\n     > *\"No, you should not wear your NovaWatch X in a sauna. According to Section 4.2 of the manual, steam and temperatures exceeding 45°C can damage the watch's protective seals.\"*\n\nThe answer is accurate, safe, and directly cites company policy!\n\n---\n\n## 5. Key Takeaways & Summary\n\n- 📚 **RAG is an open-book exam for AI**: It retrieves real facts before generating an answer.\n- 🛡️ **Prevents hallucinations**: The AI answers based on verified documents, not guesswork.\n- ⚡ **Fresh & private data**: You can update your knowledge base instantly without expensive model retraining.\n- 🔄 **The 3 steps**: Chunk & Index (library) ➔ Retrieve (search) ➔ Generate (answer)."
+  },
+  {
+    "run_id": "run_20261113_232628",
+    "timestamp": "2026-11-13T23:26:28.657745",
+    "topic": "Introduction to RAG (Retrieval-Augmented Generation)",
+    "status": "APPROVED",
+    "total_attempts": 2,
+    "final_pass_rate": 1.0,
+    "rejection_count": 1,
+    "rejection_log": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-11-13T23:26:28.531049",
+        "failed_checkpoints": [
+          "CHK_BEGINNER",
+          "CHK_EXAMPLE",
+          "CHK_NO_JARGON"
+        ],
+        "critique_summary": "The lesson failed 3 critical checkpoints: CHK_BEGINNER, CHK_EXAMPLE, CHK_NO_JARGON. Must address specific remediation feedback.",
+        "detailed_failures": [
+          {
+            "checkpoint": "Beginner-Friendly Language",
+            "id": "CHK_BEGINNER",
+            "reason": "Too academic and dry; assumes prior familiarity with AI terminology.",
+            "evidence": "Relies on technical terminology without framing.",
+            "remediation": "Introduce the open-book exam metaphor early to ground intuition."
+          },
+          {
+            "checkpoint": "Teaches by Concrete Example",
+            "id": "CHK_EXAMPLE",
+            "reason": "Lacks an end-to-end real-world walkthrough demonstrating query, retrieval, and generation.",
+            "evidence": "No concrete user inquiry with specific retrieved text provided.",
+            "remediation": "Add a realistic scenario showing: (1) User asks a question, (2) System retrieves specific chunk, (3) Model answers using that chunk."
+          },
+          {
+            "checkpoint": "Clear, No Unexplained Jargon",
+            "id": "CHK_NO_JARGON",
+            "reason": "Introduced technical jargon (dense embeddings, HNSW, cosine similarity) without defining them for a beginner.",
+            "evidence": "Found: 'high-dimensional dense vector embeddings', 'HNSW vector database' with no layman explanation.",
+            "remediation": "Define embeddings using the 'numerical fingerprint' analogy and vector DB as 'smart filing cabinet'."
+          }
+        ],
+        "remediation_plan": [
+          "Fix Beginner-Friendly Language: Introduce the open-book exam metaphor early to ground intuition.",
+          "Fix Teaches by Concrete Example: Add a realistic scenario showing: (1) User asks a question, (2) System retrieves specific chunk, (3) Model answers using that chunk.",
+          "Fix Clear, No Unexplained Jargon: Define embeddings using the 'numerical fingerprint' analogy and vector DB as 'smart filing cabinet'."
+        ],
+        "changes_made_in_next_draft": "Revision will address: Beginner-Friendly Language, Teaches by Concrete Example, Clear, No Unexplained Jargon"
+      }
+    ],
+    "final_lesson": "# 🧠 Introduction to RAG: Giving AI an Open-Book Exam\n\nImagine you are taking a tough history exam. In a **closed-book exam**, you must rely entirely on what you memorized months ago. If you forgot a date or facts changed, you might guess or get it wrong.\n\nNow imagine an **open-book exam**. You have your textbook and notes right beside you. When a question is asked, you flip to the exact chapter, read the verified fact, and write a clear, accurate answer.\n\nThat is the core idea behind **RAG (Retrieval-Augmented Generation)**. It transforms AI from a student taking a closed-book exam into a researcher taking an open-book exam.\n\n---\n\n## 1. What is RAG?\n\n**RAG** stands for **Retrieval-Augmented Generation**:\n- **Retrieval**: Finding the right reference information from an external source (like your company's documents, manuals, or articles).\n- **Augmented**: Adding those retrieved facts into the AI's question prompt as reference context.\n- **Generation**: Having the AI read that context and generate a natural, helpful, and accurate response.\n\nIn plain words: **RAG is an AI technique that looks up verified facts in a library before answering your question.**\n\n---\n\n## 2. Why Does RAG Matter? (The Problem It Solves)\n\nStandard AI language models (like ChatGPT or Claude) are incredibly smart, but they suffer from three major limitations:\n\n1. **Hallucinations (Confident Guesswork)**: When an AI doesn't know something, it can invent plausible-sounding but false answers.\n2. **Outdated Knowledge (Knowledge Cutoff)**: Models only know what was in their training data. They don't know what happened yesterday or this morning.\n3. **No Private Company Knowledge**: A generic model knows about world history, but it has never seen your company's internal HR policies, customer support tickets, or confidential product roadmaps.\n\n**Why not just retrain the AI?**\nRetraining (or fine-tuning) a large model takes days, costs thousands of dollars, and must be repeated every time a document changes. **RAG solves this elegantly**: instead of changing the AI's brain, you simply hand it the right page to read on the fly.\n\n---\n\n## 3. How RAG Works (The 3-Step Journey)\n\nThink of RAG as a 3-step assembly line:\n\n```\n[Your Documents] ──► 1. Chunk & Index ──► 2. Retrieve Relevant Page ──► 3. Generate Grounded Answer\n```\n\n### Step 1: Ingestion & Indexing (Organizing the Library)\n- **Chunking**: Large documents (like a 200-page PDF) are cut into small, bite-sized index cards (paragraphs of 200–500 words).\n- **Embeddings (Numerical Meaning Fingerprints)**: Just like humans use keywords, computers convert text into a list of numbers called an *embedding*. Sentences with similar meanings get similar number patterns.\n- **Vector Database (The Smart Filing Cabinet)**: A specialized database that stores these chunks and their numerical fingerprints so we can find matching ideas in milliseconds.\n\n### Step 2: Retrieval (Finding the Relevant Index Cards)\n- When a user asks a question, the system turns the question into a numerical fingerprint.\n- It scans the vector database and retrieves the top 2 or 3 chunks that best match the question's meaning.\n\n### Step 3: Generation (Writing the Answer)\n- The system builds a new prompt for the AI:\n  > *\"You are a helpful assistant. Use ONLY the following reference notes to answer the user's question:\n  > [Retrieved Reference Chunks]\n  > User Question: ...\"*\n- The AI reads the provided notes and crafts an accurate, grounded reply.\n\n---\n\n## 4. Concrete Real-World Walkthrough\n\nLet's see RAG in action for **NovaTech Smartwatch Customer Support**:\n\n- **User Question**: *\"Can I wear my NovaWatch X in a heated sauna?\"*\n- **Without RAG**: The generic model might say: *\"Most smartwatches are water-resistant up to 50 meters, so you should be fine!\"* (Result: The user damages their watch because high heat ruins battery seals!).\n- **With RAG**:\n  1. **Retrieve**: The system searches NovaTech's 80-page user manual and retrieves Section 4.2:\n     > *\"Warning: The NovaWatch X is water-resistant up to 5 ATM, but MUST NOT be worn in steam rooms, saunas, or hot tubs exceeding 45°C as steam damages the protective acoustic membranes.\"*\n  2. **Augment**: The system constructs the prompt:\n     > *\"Reference Manual: [Section 4.2 Warning]\n     > Question: Can I wear my NovaWatch X in a heated sauna?\"*\n  3. **Generate**: The AI responds:\n     > *\"No, you should not wear your NovaWatch X in a sauna. According to Section 4.2 of the manual, steam and temperatures exceeding 45°C can damage the watch's protective seals.\"*\n\nThe answer is accurate, safe, and directly cites company policy!\n\n---\n\n## 5. Key Takeaways & Summary\n\n- 📚 **RAG is an open-book exam for AI**: It retrieves real facts before generating an answer.\n- 🛡️ **Prevents hallucinations**: The AI answers based on verified documents, not guesswork.\n- ⚡ **Fresh & private data**: You can update your knowledge base instantly without expensive model retraining.\n- 🔄 **The 3 steps**: Chunk & Index (library) ➔ Retrieve (search) ➔ Generate (answer)."
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "attempt": 1,
+    "timestamp": "2026-11-13T23:27:14.705279",
+    "failed_checkpoints": [
+      "CHK_ACCURACY",
+      "CHK_BEGINNER",
+      "CHK_EXAMPLE",
+      "CHK_NO_JARGON",
+      "CHK_KEY_POINTS",
+      "CHK_COHERENT_FLOW"
+    ],
+    "critique_summary": "The lesson failed 6 critical checkpoints: CHK_ACCURACY, CHK_BEGINNER, CHK_EXAMPLE, CHK_NO_JARGON, CHK_KEY_POINTS, CHK_COHERENT_FLOW. Must address specific remediation feedback.",
+    "detailed_failures": [
+      {
+        "checkpoint": "Accurate & Grounded",
+        "id": "CHK_ACCURACY",
+        "reason": "Contains factual errors or misleading definitions.",
+        "evidence": "Lacks factual clarity.",
+        "remediation": "Ensure RAG is distinguished from fine-tuning."
+      },
+      {
+        "checkpoint": "Beginner-Friendly Language",
+        "id": "CHK_BEGINNER",
+        "reason": "Too academic and dry; assumes prior familiarity with AI terminology.",
+        "evidence": "Relies on technical terminology without framing.",
+        "remediation": "Introduce the open-book exam metaphor early to ground intuition."
+      },
+      {
+        "checkpoint": "Teaches by Concrete Example",
+        "id": "CHK_EXAMPLE",
+        "reason": "Lacks an end-to-end real-world walkthrough demonstrating query, retrieval, and generation.",
+        "evidence": "No concrete user inquiry with specific retrieved text provided.",
+        "remediation": "Add a realistic scenario showing: (1) User asks a question, (2) System retrieves specific chunk, (3) Model answers using that chunk."
+      },
+      {
+        "checkpoint": "Clear, No Unexplained Jargon",
+        "id": "CHK_NO_JARGON",
+        "reason": "Introduced technical jargon (dense embeddings, HNSW, cosine similarity) without defining them for a beginner.",
+        "evidence": "Found: 'high-dimensional dense vector embeddings', 'HNSW vector database' with no layman explanation.",
+        "remediation": "Define embeddings using the 'numerical fingerprint' analogy and vector DB as 'smart filing cabinet'."
+      },
+      {
+        "checkpoint": "Covers All Key Pillars",
+        "id": "CHK_KEY_POINTS",
+        "reason": "Fails to cover all three pillars adequately.",
+        "evidence": "Missing clear coverage of all three pillars.",
+        "remediation": "Ensure distinct sections for What it is, Why it matters, and How it works."
+      },
+      {
+        "checkpoint": "Coherent Pedagogical Flow",
+        "id": "CHK_COHERENT_FLOW",
+        "reason": "Teaching flow is disjointed or lacks structure.",
+        "evidence": "Needs better structural progression.",
+        "remediation": "Organize with clear numbered section headers and a concluding summary."
+      }
+    ],
+    "remediation_plan": [
+      "Fix Accurate & Grounded: Ensure RAG is distinguished from fine-tuning.",
+      "Fix Beginner-Friendly Language: Introduce the open-book exam metaphor early to ground intuition.",
+      "Fix Teaches by Concrete Example: Add a realistic scenario showing: (1) User asks a question, (2) System retrieves specific chunk, (3) Model answers using that chunk.",
+      "Fix Clear, No Unexplained Jargon: Define embeddings using the 'numerical fingerprint' analogy and vector DB as 'smart filing cabinet'.",
+      "Fix Covers All Key Pillars: Ensure distinct sections for What it is, Why it matters, and How it works.",
+      "Fix Coherent Pedagogical Flow: Organize with clear numbered section headers and a concluding summary."
+    ],
+    "changes_made_in_next_draft": "Revision will address: Accurate & Grounded, Beginner-Friendly Language, Teaches by Concrete Example, Clear, No Unexplained Jargon, Covers All Key Pillars, Coherent Pedagogical Flow"
+  },
+  {
+    "attempt": 2,
+    "timestamp": "2026-11-13T23:27:14.707355",
+    "failed_checkpoints": [
+      "CHK_ACCURACY",
+      "CHK_BEGINNER",
+      "CHK_EXAMPLE",
+      "CHK_NO_JARGON",
+      "CHK_KEY_POINTS",
+      "CHK_COHERENT_FLOW"
+    ],
+    "critique_summary": "The lesson failed 6 critical checkpoints: CHK_ACCURACY, CHK_BEGINNER, CHK_EXAMPLE, CHK_NO_JARGON, CHK_KEY_POINTS, CHK_COHERENT_FLOW. Must address specific remediation feedback.",
+    "detailed_failures": [
+      {
+        "checkpoint": "Accurate & Grounded",
+        "id": "CHK_ACCURACY",
+        "reason": "Contains factual errors or misleading definitions.",
+        "evidence": "Lacks factual clarity.",
+        "remediation": "Ensure RAG is distinguished from fine-tuning."
+      },
+      {
+        "checkpoint": "Beginner-Friendly Language",
+        "id": "CHK_BEGINNER",
+        "reason": "Too academic and dry; assumes prior familiarity with AI terminology.",
+        "evidence": "Relies on technical terminology without framing.",
+        "remediation": "Introduce the open-book exam metaphor early to ground intuition."
+      },
+      {
+        "checkpoint": "Teaches by Concrete Example",
+        "id": "CHK_EXAMPLE",
+        "reason": "Lacks an end-to-end real-world walkthrough demonstrating query, retrieval, and generation.",
+        "evidence": "No concrete user inquiry with specific retrieved text provided.",
+        "remediation": "Add a realistic scenario showing: (1) User asks a question, (2) System retrieves specific chunk, (3) Model answers using that chunk."
+      },
+      {
+        "checkpoint": "Clear, No Unexplained Jargon",
+        "id": "CHK_NO_JARGON",
+        "reason": "Introduced technical jargon (dense embeddings, HNSW, cosine similarity) without defining them for a beginner.",
+        "evidence": "Found: 'high-dimensional dense vector embeddings', 'HNSW vector database' with no layman explanation.",
+        "remediation": "Define embeddings using the 'numerical fingerprint' analogy and vector DB as 'smart filing cabinet'."
+      },
+      {
+        "checkpoint": "Covers All Key Pillars",
+        "id": "CHK_KEY_POINTS",
+        "reason": "Fails to cover all three pillars adequately.",
+        "evidence": "Missing clear coverage of all three pillars.",
+        "remediation": "Ensure distinct sections for What it is, Why it matters, and How it works."
+      },
+      {
+        "checkpoint": "Coherent Pedagogical Flow",
+        "id": "CHK_COHERENT_FLOW",
+        "reason": "Teaching flow is disjointed or lacks structure.",
+        "evidence": "Needs better structural progression.",
+        "remediation": "Organize with clear numbered section headers and a concluding summary."
+      }
+    ],
+    "remediation_plan": [
+      "Fix Accurate & Grounded: Ensure RAG is distinguished from fine-tuning.",
+      "Fix Beginner-Friendly Language: Introduce the open-book exam metaphor early to ground intuition.",
+      "Fix Teaches by Concrete Example: Add a realistic scenario showing: (1) User asks a question, (2) System retrieves specific chunk, (3) Model answers using that chunk.",
+      "Fix Clear, No Unexplained Jargon: Define embeddings using the 'numerical fingerprint' analogy and vector DB as 'smart filing cabinet'.",
+      "Fix Covers All Key Pillars: Ensure distinct sections for What it is, Why it matters, and How it works.",
+      "Fix Coherent Pedagogical Flow: Organize with clear numbered section headers and a concluding summary."
+    ],
+    "changes_made_in_next_draft": "Revision will address: Accurate & Grounded, Beginner-Friendly Language, Teaches by Concrete Example, Clear, No Unexplained Jargon, Covers All Key Pillars, Coherent Pedagogical Flow"
+  }
+]

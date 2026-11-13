@@ -7,7 +7,7 @@
 
 ---
 ## 🎯 Assignment Deliverables
-1. **GitHub Repository:** [Link to Repo] (You are here)
+1. **GitHub Repository:** https://github.com/anmolverma29/GENAI_Assignment_NxtWave
 2. **Final Lesson Document:** [Link to Google Doc / Notion]
 3. **Loom Video Walkthrough:** [Link to Loom Video] (15-20 min demo showing the end-to-end loop and catching a deliberate error).
 
@@ -138,14 +138,14 @@ All 13 tests verify:
 ## 📦 Submission Artifacts
 
 The final generated submission outputs are located in:
-1. **Passing Lesson:** [`data/outputs/rag_lesson_final.md`](file:///c:/Users/anmol/Downloads/GENAI_Assignment_NxtWave/data/outputs/rag_lesson_final.md)
+1. **Passing Lesson:** [`data/outputs/rag_lesson_final.md`]
    - Opens with the relatable **Open-Book vs Closed-Book Exam** analogy.
    - Covers **What it is**, **Why it matters** (hallucinations, fresh data, enterprise privacy), and **How it works** (Ingest ➔ Retrieve ➔ Generate).
    - Features an end-to-end customer support walkthrough (**NovaTech Smartwatch Sauna inquiry**).
    - Translates all technical terms (*embeddings = numerical fingerprints*, *vector DB = smart filing cabinet*, *chunking = index cards*).
-2. **Rejection Audit Log:** [`data/outputs/rag_rejection_log.json`](file:///c:/Users/anmol/Downloads/GENAI_Assignment_NxtWave/data/outputs/rag_rejection_log.json)
+2. **Rejection Audit Log:** [`data/outputs/rag_rejection_log.json`]
    - Documents Attempt 1's rejection on `CHK_BEGINNER`, `CHK_EXAMPLE`, and `CHK_NO_JARGON`.
    - Records the diagnostic evidence, evaluator critique, and remediation steps that steered Attempt 2 to a 100% pass!
-3. **Architecture Document:** [`ARCHITECTURE.md`](file:///c:/Users/anmol/Downloads/GENAI_Assignment_NxtWave/ARCHITECTURE.md)
+3. **Architecture Document:** [`ARCHITECTURE.md`]
    - Explains state machines, rubric trade-offs, dual-layer evaluation, and self-evolution mechanisms.
 

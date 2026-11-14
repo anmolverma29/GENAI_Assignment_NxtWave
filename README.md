@@ -9,7 +9,7 @@
 ## 🎯 Assignment Deliverables
 1. **GitHub Repository:** https://github.com/anmolverma29/GENAI_Assignment_NxtWave
 2. **Final Lesson Document:** https://docs.google.com/document/d/1h7n3lNc96TpcQu851MHtc9p9KXMLNgl3DemMxy1KwdA/edit?usp=sharing
-3. **Loom Video Walkthrough:** [Link to Loom Video] (15-20 min demo showing the end-to-end loop and catching a deliberate error).
+3. **Loom Video Walkthrough:** https://www.loom.com/share/cffe60ee75c642e7bb7e5d064b56ac9b.
 
 ## 🌟 Key Highlights
 
